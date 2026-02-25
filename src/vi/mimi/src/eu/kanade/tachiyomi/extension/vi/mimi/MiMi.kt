@@ -123,7 +123,7 @@ class MiMi : HttpSource() {
         return result.mapIndexed { index, chapter ->
             SChapter.create().apply {
                 url = "/chapter/${chapter.id}"
-                name = chapter.title ?: "Chapter ${result.size - index}"
+                name = chapter.title?.takeIf { it.isNotBlank() } ?: "Chapter ${result.size - index}"
                 chapter_number = (result.size - index).toFloat()
                 date_upload = chapter.uploadDate?.let { parseDate(it) } ?: 0L
             }
