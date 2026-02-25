@@ -109,9 +109,7 @@ class MiMi : HttpSource() {
         return result.toSManga()
     }
 
-    override fun getMangaUrl(manga: SManga): String {
-        return "$baseUrl${manga.url}"
-    }
+    override fun getMangaUrl(manga: SManga): String = "$baseUrl${manga.url}"
 
     // ============================== Chapters ======================================
 
@@ -132,21 +130,17 @@ class MiMi : HttpSource() {
         }
     }
 
-    private fun parseDate(dateString: String): Long {
-        return try {
-            dateFormat.parse(dateString)?.time ?: 0L
-        } catch (_: Exception) {
-            0L
-        }
+    private fun parseDate(dateString: String): Long = try {
+        dateFormat.parse(dateString)?.time ?: 0L
+    } catch (_: Exception) {
+        0L
     }
 
     private val dateFormat by lazy {
         SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.ROOT)
     }
 
-    override fun getChapterUrl(chapter: SChapter): String {
-        return "$baseUrl${chapter.url}"
-    }
+    override fun getChapterUrl(chapter: SChapter): String = "$baseUrl${chapter.url}"
 
     // ============================== Pages ======================================
 
@@ -162,13 +156,9 @@ class MiMi : HttpSource() {
         }
     }
 
-    override fun imageUrlParse(response: Response): String {
-        throw UnsupportedOperationException()
-    }
+    override fun imageUrlParse(response: Response): String = throw UnsupportedOperationException()
 
     // ============================== Helpers ======================================
 
-    private inline fun <reified T> Response.parseAs(): T {
-        return json.decodeFromString<T>(body.string())
-    }
+    private inline fun <reified T> Response.parseAs(): T = json.decodeFromString<T>(body.string())
 }
