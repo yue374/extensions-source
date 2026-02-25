@@ -78,7 +78,8 @@ class GenreDto(
 class ChapterDto(
     val id: Int,
     val title: String? = null,
-    val uploadDate: String? = null,
+    val order: Int = 0,
+    val createdAt: String? = null,
 )
 
 @Serializable
