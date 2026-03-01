@@ -127,10 +127,10 @@ class NewTruyenTranh :
                 val linkElement = element.selectFirst("h3 a")!!
                 title = linkElement.text()
                 setUrlWithoutDomain(linkElement.absUrl("href"))
-                thumbnail_url = element.selectFirst(".image img")?.let { img ->
-                    img.absUrl("data-original")
-                        .ifEmpty { img.absUrl("src") }
-                }?.takeIf { it.isNotEmpty() }
+                val imgElement = element.selectFirst(".image img")
+                thumbnail_url = imgElement?.absUrl("data-original")
+                    .takeIf { !it.isNullOrEmpty() }
+                    ?: imgElement?.absUrl("src")
             }
         }
         val hasNextPage = document.selectFirst(".pagination li:last-child a") != null
