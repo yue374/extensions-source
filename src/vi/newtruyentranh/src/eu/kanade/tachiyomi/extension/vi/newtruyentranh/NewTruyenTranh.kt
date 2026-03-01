@@ -17,13 +17,15 @@ import keiyoushi.utils.tryParse
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.Request
 import okhttp3.Response
-import java.text.SimpleDateFormat
 import java.io.IOException
+import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 import java.util.concurrent.TimeUnit
 
-class NewTruyenTranh : HttpSource(), ConfigurableSource {
+class NewTruyenTranh :
+    HttpSource(),
+    ConfigurableSource {
     override val name = "NewTruyenTranh"
     override val lang = "vi"
     private val defaultBaseUrl = "https://newtruyentranh7.com"
@@ -63,9 +65,7 @@ class NewTruyenTranh : HttpSource(), ConfigurableSource {
         return GET(url, headers)
     }
 
-    override fun popularMangaParse(response: Response): MangasPage {
-        return parseMangaListPage(response)
-    }
+    override fun popularMangaParse(response: Response): MangasPage = parseMangaListPage(response)
 
     // ============================== Latest ================================
 
@@ -78,9 +78,7 @@ class NewTruyenTranh : HttpSource(), ConfigurableSource {
         return GET(url, headers)
     }
 
-    override fun latestUpdatesParse(response: Response): MangasPage {
-        return parseMangaListPage(response)
-    }
+    override fun latestUpdatesParse(response: Response): MangasPage = parseMangaListPage(response)
 
     // ============================== Search ================================
 
@@ -120,9 +118,7 @@ class NewTruyenTranh : HttpSource(), ConfigurableSource {
         return GET(url, headers)
     }
 
-    override fun searchMangaParse(response: Response): MangasPage {
-        return parseMangaListPage(response)
-    }
+    override fun searchMangaParse(response: Response): MangasPage = parseMangaListPage(response)
 
     private fun parseMangaListPage(response: Response): MangasPage {
         val document = response.asJsoup()
