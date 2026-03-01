@@ -134,8 +134,7 @@ class NewTruyenTranh : HttpSource(), ConfigurableSource {
                 thumbnail_url = element.selectFirst(".image img")?.let { img ->
                     img.absUrl("data-original")
                         .ifEmpty { img.absUrl("src") }
-                        .ifEmpty { null }
-                }
+                }?.takeIf { it.isNotEmpty() }
             }
         }
         val hasNextPage = document.selectFirst(".pagination li:last-child a") != null
