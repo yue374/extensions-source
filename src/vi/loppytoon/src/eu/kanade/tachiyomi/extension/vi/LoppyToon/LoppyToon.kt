@@ -46,9 +46,7 @@ class LoppyToon : HttpSource() {
 
     // ============================== Popular ===============================
 
-    override fun popularMangaRequest(page: Int): Request {
-        return GET(baseUrl, headers)
-    }
+    override fun popularMangaRequest(page: Int): Request = GET(baseUrl, headers)
 
     override fun popularMangaParse(response: Response): MangasPage {
         val document = response.asJsoup()
@@ -66,9 +64,7 @@ class LoppyToon : HttpSource() {
 
     // =============================== Latest ===============================
 
-    override fun latestUpdatesRequest(page: Int): Request {
-        return GET("$baseUrl/truyen-moi-cap-nhat?page=$page", headers)
-    }
+    override fun latestUpdatesRequest(page: Int): Request = GET("$baseUrl/truyen-moi-cap-nhat?page=$page", headers)
 
     override fun latestUpdatesParse(response: Response): MangasPage {
         val document = response.asJsoup()
@@ -177,13 +173,11 @@ class LoppyToon : HttpSource() {
         }
     }
 
-    private fun mangaFromElement(element: Element): SManga {
-        return SManga.create().apply {
-            val linkElement = element.selectFirst("a")!!
-            setUrlWithoutDomain(linkElement.absUrl("href"))
-            title = element.selectFirst("h3.comic-title")!!.text()
-            thumbnail_url = element.selectFirst(".comic-cover img")?.absUrl("src")
-        }
+    private fun mangaFromElement(element: Element): SManga = SManga.create().apply {
+        val linkElement = element.selectFirst("a")!!
+        setUrlWithoutDomain(linkElement.absUrl("href"))
+        title = element.selectFirst("h3.comic-title")!!.text()
+        thumbnail_url = element.selectFirst(".comic-cover img")?.absUrl("src")
     }
 
     // ============================== Chapters ==============================
@@ -222,13 +216,11 @@ class LoppyToon : HttpSource() {
         return chapters
     }
 
-    private fun parseChapters(document: Document): List<SChapter> {
-        return document.select("a.chapter-item").map { element ->
-            SChapter.create().apply {
-                setUrlWithoutDomain(element.absUrl("href"))
-                name = element.selectFirst("h3")!!.text()
-                date_upload = element.selectFirst("span.chapter-date")?.text().toDate()
-            }
+    private fun parseChapters(document: Document): List<SChapter> = document.select("a.chapter-item").map { element ->
+        SChapter.create().apply {
+            setUrlWithoutDomain(element.absUrl("href"))
+            name = element.selectFirst("h3")!!.text()
+            date_upload = element.selectFirst("span.chapter-date")?.text().toDate()
         }
     }
 
@@ -277,9 +269,7 @@ class LoppyToon : HttpSource() {
         }
     }
 
-    override fun imageUrlParse(response: Response): String {
-        throw UnsupportedOperationException()
-    }
+    override fun imageUrlParse(response: Response): String = throw UnsupportedOperationException()
 
     // =============================== Related ================================
     // dirty hack to disable suggested mangas on Komikku due to heavy rate limit
