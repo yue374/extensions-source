@@ -7,7 +7,7 @@ package eu.kanade.tachiyomi.extension.vi.vihentai
  * Args: h=encoded data, n=charset, t=offset, e=base & delimiter index (n[e] is delimiter).
  * Decoded output: KuroReader('#chapter-content', ["url1","url2",...], 0)
  */
-object viHentaiPacker {
+object ViHentaiPacker {
 
     fun extractImageUrls(scriptData: String): List<String> {
         val decoded = unpack(scriptData)

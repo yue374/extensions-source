@@ -18,9 +18,9 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.TimeZone
 
-class viHentai : HttpSource() {
+class ViHentai : HttpSource() {
 
-    override val name = "viHentai"
+    override val name = "ViHentai"
 
     override val baseUrl = "https://vi-hentai.moe"
 
@@ -160,7 +160,7 @@ class viHentai : HttpSource() {
             .firstOrNull { it.contains("eval(function(h,u,n,t,e,r)") }
             ?: throw Exception("Could not find packed script with image data")
 
-        return viHentaiPacker.extractImageUrls(packedScript).mapIndexed { index, url ->
+        return ViHentaiPacker.extractImageUrls(packedScript).mapIndexed { index, url ->
             Page(index, imageUrl = url)
         }
     }
