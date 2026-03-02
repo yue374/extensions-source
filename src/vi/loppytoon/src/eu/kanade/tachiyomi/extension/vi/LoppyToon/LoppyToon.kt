@@ -148,11 +148,12 @@ class LoppyToon : HttpSource() {
             val altName = document.selectFirst("span.meta-label:contains(Tên khác)")
                 ?.nextElementSibling()?.text()?.trim()
 
-            val descText: String = document.selectFirst("div.manga-description")?.let { desc ->
-                desc.select("p").filter { it.text().isNotBlank() }
-                    .joinToString("\n") { it.text() }.trim()
-                    .ifEmpty { desc.text().trim() }
-            } ?: ""
+            val descElement = document.selectFirst("div.manga-description")
+            val descText = descElement?.select("p")
+                ?.filter { it.text().isNotBlank() }
+                ?.joinToString("\n") { it.text() }?.trim()
+                ?.ifEmpty { descElement.text().trim() }
+                ?: ""
 
             description = if (!altName.isNullOrBlank()) {
                 "Tên khác: $altName\n$descText"
