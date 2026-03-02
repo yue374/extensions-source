@@ -1,7 +1,7 @@
 ext {
-    extName = 'viHentai'
-    extClass = '.viHentai'
-    extVersionCode = 2
+    extName = 'ViHentai'
+    extClass = '.ViHentai'
+    extVersionCode = 1
     isNsfw = true
 }
 
