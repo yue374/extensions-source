@@ -150,14 +150,12 @@ class VinaHentai : HttpSource() {
             thumbnail_url = document.selectFirst("img[alt*=Bìa]")?.absUrl("src")
                 ?: document.selectFirst("img[src*=story-images]")?.absUrl("src")
 
-            description = document.select("h2")
-                .firstOrNull { it.text().contains("GIỚI THIỆU", ignoreCase = true) }
-                ?.nextElementSibling()
+            description = document.selectFirst("#manga-description-section .text-txt-secondary")
                 ?.text()?.trim()
 
             status = document.body().text().let { bodyText ->
                 when {
-                    bodyText.contains("Đang cập nhật") -> SManga.ONGOING
+                    bodyText.contains("Đang tiến hành") -> SManga.ONGOING
                     bodyText.contains("Đã hoàn thành") -> SManga.COMPLETED
                     else -> SManga.UNKNOWN
                 }
