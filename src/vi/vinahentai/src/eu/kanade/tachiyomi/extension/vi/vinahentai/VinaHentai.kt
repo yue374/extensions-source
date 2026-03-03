@@ -30,19 +30,15 @@ class VinaHentai : HttpSource() {
 
     // ============================== Popular ===============================
 
-    override fun popularMangaRequest(page: Int): Request =
-        GET("$baseUrl/danh-sach?page=$page&sort=views", headers)
+    override fun popularMangaRequest(page: Int): Request = GET("$baseUrl/danh-sach?page=$page&sort=views", headers)
 
-    override fun popularMangaParse(response: Response): MangasPage =
-        parseMangaListPage(response.asJsoup())
+    override fun popularMangaParse(response: Response): MangasPage = parseMangaListPage(response.asJsoup())
 
     // =============================== Latest ===============================
 
-    override fun latestUpdatesRequest(page: Int): Request =
-        GET("$baseUrl/danh-sach?page=$page&sort=updatedAt", headers)
+    override fun latestUpdatesRequest(page: Int): Request = GET("$baseUrl/danh-sach?page=$page&sort=updatedAt", headers)
 
-    override fun latestUpdatesParse(response: Response): MangasPage =
-        parseMangaListPage(response.asJsoup())
+    override fun latestUpdatesParse(response: Response): MangasPage = parseMangaListPage(response.asJsoup())
 
     // =============================== Search ===============================
 
@@ -228,8 +224,7 @@ class VinaHentai : HttpSource() {
         }
     }
 
-    override fun imageUrlParse(response: Response): String =
-        throw UnsupportedOperationException()
+    override fun imageUrlParse(response: Response): String = throw UnsupportedOperationException()
 
     companion object {
         private val NUMBER_REGEX = Regex("""\d+""")
