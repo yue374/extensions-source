@@ -32,19 +32,15 @@ class KamiComic : HttpSource() {
 
     // ============================== Popular ===============================
 
-    override fun popularMangaRequest(page: Int): Request =
-        GET("$baseUrl/bang-xep-hang-truyen/page/$page/", headers)
+    override fun popularMangaRequest(page: Int): Request = GET("$baseUrl/bang-xep-hang-truyen/page/$page/", headers)
 
-    override fun popularMangaParse(response: Response): MangasPage =
-        parseMangaListPage(response.asJsoup())
+    override fun popularMangaParse(response: Response): MangasPage = parseMangaListPage(response.asJsoup())
 
     // =============================== Latest ===============================
 
-    override fun latestUpdatesRequest(page: Int): Request =
-        GET("$baseUrl/moi-cap-nhat/page/$page/", headers)
+    override fun latestUpdatesRequest(page: Int): Request = GET("$baseUrl/moi-cap-nhat/page/$page/", headers)
 
-    override fun latestUpdatesParse(response: Response): MangasPage =
-        parseMangaListPage(response.asJsoup())
+    override fun latestUpdatesParse(response: Response): MangasPage = parseMangaListPage(response.asJsoup())
 
     // =============================== Search ===============================
 
@@ -167,8 +163,7 @@ class KamiComic : HttpSource() {
 
     // ============================== Chapters ==============================
 
-    override fun chapterListRequest(manga: SManga): Request =
-        GET("$baseUrl${manga.url}", headers)
+    override fun chapterListRequest(manga: SManga): Request = GET("$baseUrl${manga.url}", headers)
 
     override fun chapterListParse(response: Response): List<SChapter> {
         val document = response.asJsoup()
@@ -194,17 +189,16 @@ class KamiComic : HttpSource() {
         return chapters
     }
 
-    private fun parseChapters(document: Document): List<SChapter> =
-        document.select(".chapter-list a.uk-link-toggle").map { element ->
-            SChapter.create().apply {
-                setUrlWithoutDomain(element.absUrl("href"))
-                val rawName = element.selectFirst("h3")?.text()?.trim()
-                    ?: element.text().trim()
-                name = CHAPTER_NAME_REGEX.find(rawName)?.value ?: rawName
-                date_upload = element.selectFirst("time")?.text()
-                    .parseRelativeDate()
-            }
+    private fun parseChapters(document: Document): List<SChapter> = document.select(".chapter-list a.uk-link-toggle").map { element ->
+        SChapter.create().apply {
+            setUrlWithoutDomain(element.absUrl("href"))
+            val rawName = element.selectFirst("h3")?.text()?.trim()
+                ?: element.text().trim()
+            name = CHAPTER_NAME_REGEX.find(rawName)?.value ?: rawName
+            date_upload = element.selectFirst("time")?.text()
+                .parseRelativeDate()
         }
+    }
 
     private fun String?.parseRelativeDate(): Long {
         this ?: return 0L
@@ -238,8 +232,7 @@ class KamiComic : HttpSource() {
         }.filterNot { it.imageUrl!!.startsWith("data:") }
     }
 
-    override fun imageUrlParse(response: Response): String =
-        throw UnsupportedOperationException()
+    override fun imageUrlParse(response: Response): String = throw UnsupportedOperationException()
 
     companion object {
         private val MARK_REGEX = Regex("""<mark>(.*?)</mark>""")
