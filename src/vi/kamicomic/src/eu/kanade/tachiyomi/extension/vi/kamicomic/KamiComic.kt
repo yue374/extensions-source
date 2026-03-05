@@ -128,13 +128,10 @@ class KamiComic : HttpSource() {
 
     override fun mangaDetailsParse(response: Response): SManga {
         val mangaList = response.parseAs<List<WpManga>>()
-        val wpManga = mangaList.firstOrNull()
-            ?: throw Exception("Manga not found")
+        val wpManga = mangaList.first()
 
         return SManga.create().apply {
-            title = wpManga.title?.rendered
-                ?.let { Jsoup.parse(it).text() }
-                ?: throw Exception("Title not found")
+            title = Jsoup.parse(wpManga.title!!.rendered!!).text()
 
             description = wpManga.content?.rendered?.let { html ->
                 Jsoup.parse(html).text().trim()
