@@ -199,14 +199,11 @@ class TeamLanhLung : HttpSource() {
     }
 
     private fun parseDescription(document: Document): String? {
-        val rawDescription = document.selectFirst(".intro-container .hide-long-text")
-            ?.let { block ->
-                val ownText = block.ownText().trim()
-                if (ownText.isNotEmpty()) ownText else block.text()
-            }
-            ?.substringBefore("— Xem Thêm —")
-            ?.trim()
-            ?: return null
+        val block: Element = document.selectFirst(".intro-container .hide-long-text") ?: return null
+        val ownText = block.ownText().trim()
+        val rawDescription = (if (ownText.isNotEmpty()) ownText else block.text())
+            .substringBefore("— Xem Thêm —")
+            .trim()
 
         return rawDescription
             .removePrefix("\"")
