@@ -12,24 +12,27 @@ fun getFilters() = FilterList(
 
 class R18Filter : Filter.CheckBox("R18", false)
 
-class GenreFilter : Filter.Select<String>(
-    "Thể loại",
-    genres.map { it.first }.toTypedArray(),
-) {
+class GenreFilter :
+    Filter.Select<String>(
+        "Thể loại",
+        genres.map { it.first }.toTypedArray(),
+    ) {
     val slug get() = genres[state].second
 }
 
-class StatusFilter : Filter.Select<String>(
-    "Trạng thái",
-    statuses.map { it.first }.toTypedArray(),
-) {
+class StatusFilter :
+    Filter.Select<String>(
+        "Trạng thái",
+        statuses.map { it.first }.toTypedArray(),
+    ) {
     val slug get() = statuses[state].second
 }
 
-class SortFilter : Filter.Select<String>(
-    "Sắp xếp theo",
-    sorts.map { it.first }.toTypedArray(),
-) {
+class SortFilter :
+    Filter.Select<String>(
+        "Sắp xếp theo",
+        sorts.map { it.first }.toTypedArray(),
+    ) {
     val slug get() = sorts[state].second
 }
 

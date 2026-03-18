@@ -134,14 +134,11 @@ class YuriGarden : HttpSource() {
 
     // ============================== Details ===============================
 
-    private fun mangaId(manga: SManga): String =
-        manga.url.substringAfterLast("/")
+    private fun mangaId(manga: SManga): String = manga.url.substringAfterLast("/")
 
-    override fun mangaDetailsRequest(manga: SManga): Request =
-        GET("$apiUrl/comics/${mangaId(manga)}", apiHeaders())
+    override fun mangaDetailsRequest(manga: SManga): Request = GET("$apiUrl/comics/${mangaId(manga)}", apiHeaders())
 
-    override fun getMangaUrl(manga: SManga): String =
-        "$baseUrl${manga.url}"
+    override fun getMangaUrl(manga: SManga): String = "$baseUrl${manga.url}"
 
     override fun mangaDetailsParse(response: Response): SManga {
         val comic = response.parseAs<ComicDetail>()
@@ -166,11 +163,9 @@ class YuriGarden : HttpSource() {
 
     // ============================== Chapters ==============================
 
-    private fun chapterId(chapter: SChapter): String =
-        chapter.url.substringAfterLast("/")
+    private fun chapterId(chapter: SChapter): String = chapter.url.substringAfterLast("/")
 
-    override fun chapterListRequest(manga: SManga): Request =
-        GET("$apiUrl/chapters/comic/${mangaId(manga)}", apiHeaders())
+    override fun chapterListRequest(manga: SManga): Request = GET("$apiUrl/chapters/comic/${mangaId(manga)}", apiHeaders())
 
     override fun chapterListParse(response: Response): List<SChapter> {
         val chapters = response.parseAs<List<ChapterData>>()
@@ -186,33 +181,30 @@ class YuriGarden : HttpSource() {
             }
     }
 
-    override fun getChapterUrl(chapter: SChapter): String =
-        "$baseUrl${chapter.url}"
+    override fun getChapterUrl(chapter: SChapter): String = "$baseUrl${chapter.url}"
 
     // ============================== Pages =================================
 
-    override fun pageListRequest(chapter: SChapter): Request =
-        GET("$apiUrl/chapters/pages/${chapterId(chapter)}", apiHeaders())
+    override fun pageListRequest(chapter: SChapter): Request = GET("$apiUrl/chapters/pages/${chapterId(chapter)}", apiHeaders())
 
-    override fun fetchPageList(chapter: SChapter): Observable<List<Page>> =
-        client.newCall(pageListRequest(chapter))
-            .asObservable()
-            .doOnNext { response ->
-                if (response.code == 403) {
-                    val body = runCatching { response.peekBody(1024 * 1024).string() }.getOrDefault("")
-                    val hasTurnstile = isTurnstileChallenge(response, body)
-                    response.close()
-                    if (hasTurnstile || hasTurnstileChallenge(chapter)) {
-                        throw Exception(CLOUDFLARE_VERIFY_MESSAGE)
-                    }
-                    throw Exception("HTTP error 403")
+    override fun fetchPageList(chapter: SChapter): Observable<List<Page>> = client.newCall(pageListRequest(chapter))
+        .asObservable()
+        .doOnNext { response ->
+            if (response.code == 403) {
+                val body = runCatching { response.peekBody(1024 * 1024).string() }.getOrDefault("")
+                val hasTurnstile = isTurnstileChallenge(response, body)
+                response.close()
+                if (hasTurnstile || hasTurnstileChallenge(chapter)) {
+                    throw Exception(CLOUDFLARE_VERIFY_MESSAGE)
                 }
-                if (!response.isSuccessful) {
-                    response.close()
-                    throw Exception("HTTP error ${response.code}")
-                }
+                throw Exception("HTTP error 403")
             }
-            .map(::pageListParse)
+            if (!response.isSuccessful) {
+                response.close()
+                throw Exception("HTTP error ${response.code}")
+            }
+        }
+        .map(::pageListParse)
 
     override fun pageListParse(response: Response): List<Page> {
         val result = decryptIfNeeded(response)
@@ -267,11 +259,10 @@ class YuriGarden : HttpSource() {
         }
     }
 
-    private fun isTurnstileChallenge(response: Response, body: String): Boolean =
-        response.header("cf-mitigated")?.equals("challenge", ignoreCase = true) == true ||
-            hasTurnstileElement(body) ||
-            body.contains("/cdn-cgi/challenge-platform", ignoreCase = true) ||
-            body.contains("Just a moment", ignoreCase = true)
+    private fun isTurnstileChallenge(response: Response, body: String): Boolean = response.header("cf-mitigated")?.equals("challenge", ignoreCase = true) == true ||
+        hasTurnstileElement(body) ||
+        body.contains("/cdn-cgi/challenge-platform", ignoreCase = true) ||
+        body.contains("Just a moment", ignoreCase = true)
 
     private fun hasTurnstileElement(html: String): Boolean {
         if (html.isBlank()) return false
@@ -300,8 +291,7 @@ class YuriGarden : HttpSource() {
         }
     }.getOrNull()
 
-    override fun imageUrlParse(response: Response): String =
-        throw UnsupportedOperationException()
+    override fun imageUrlParse(response: Response): String = throw UnsupportedOperationException()
 
     // =============================== Related ================================
 
@@ -318,8 +308,7 @@ class YuriGarden : HttpSource() {
         return url.queryParameter("page")?.toIntOrNull() ?: 1
     }
 
-    private fun String.toThumbnailUrl(): String =
-        if (startsWith("http")) this else "$dbUrl/storage/v1/object/public/yuri-garden-store/$this"
+    private fun String.toThumbnailUrl(): String = if (startsWith("http")) this else "$dbUrl/storage/v1/object/public/yuri-garden-store/$this"
 
     companion object {
         private const val LIMIT = 15
