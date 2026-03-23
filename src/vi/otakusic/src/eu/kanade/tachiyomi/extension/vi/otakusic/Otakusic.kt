@@ -184,11 +184,9 @@ class Otakusic : HttpSource() {
 
     // =============================== Pages ================================
 
-    override fun pageListRequest(chapter: SChapter): Request =
-        throw UnsupportedOperationException()
+    override fun pageListRequest(chapter: SChapter): Request = throw UnsupportedOperationException()
 
-    override fun pageListParse(response: Response): List<Page> =
-        throw UnsupportedOperationException()
+    override fun pageListParse(response: Response): List<Page> = throw UnsupportedOperationException()
 
     override fun fetchPageList(chapter: SChapter): rx.Observable<List<Page>> {
         val parts = chapter.url.removePrefix(CHAPTER_URL_PREFIX).split("/")
