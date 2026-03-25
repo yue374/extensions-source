@@ -16,9 +16,9 @@ import okhttp3.FormBody
 import okhttp3.Request
 import okhttp3.Response
 import java.text.SimpleDateFormat
-import java.util.concurrent.ConcurrentHashMap
 import java.util.Locale
 import java.util.TimeZone
+import java.util.concurrent.ConcurrentHashMap
 
 class Vcomycs : HttpSource() {
     override val name = "Vcomycs"
