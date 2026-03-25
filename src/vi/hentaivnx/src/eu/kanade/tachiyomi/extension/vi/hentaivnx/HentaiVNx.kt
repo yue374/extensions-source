@@ -208,7 +208,6 @@ class HentaiVNx : ParsedHttpSource() {
         val parsedUrl = url.toHttpUrlOrNull() ?: return url
 
         return when {
-
             parsedUrl.host == "external-content.duckduckgo.com" &&
                 parsedUrl.encodedPath == "/iu/" ->
                 parsedUrl.queryParameter("u")?.takeIf { it.isNotBlank() } ?: url
