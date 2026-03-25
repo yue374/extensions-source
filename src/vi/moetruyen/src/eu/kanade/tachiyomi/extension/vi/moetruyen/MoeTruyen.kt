@@ -9,6 +9,7 @@ import eu.kanade.tachiyomi.source.model.SChapter
 import eu.kanade.tachiyomi.source.model.SManga
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.util.asJsoup
+import keiyoushi.utils.firstInstanceOrNull
 import keiyoushi.utils.tryParse
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.Request
@@ -46,7 +47,7 @@ class MoeTruyen : HttpSource() {
 
     private fun popularMangaFromElement(element: Element): SManga = SManga.create().apply {
         setUrlWithoutDomain(element.absUrl("href"))
-        title = element.selectFirst(".homepage-ranking-item__title")!!.text().trim()
+        title = element.selectFirst(".homepage-ranking-item__title")!!.text()
         thumbnail_url = element.selectFirst("img")?.absUrl("src")
     }
 
@@ -65,7 +66,7 @@ class MoeTruyen : HttpSource() {
     private fun latestMangaFromElement(element: Element): SManga = SManga.create().apply {
         val linkElement = element.selectFirst("a[href^=/manga/]")!!
         setUrlWithoutDomain(linkElement.absUrl("href"))
-        title = element.selectFirst("h3")!!.text().trim()
+        title = element.selectFirst("h3")!!.text()
         thumbnail_url = element.selectFirst("img")?.absUrl("src")
     }
 
@@ -85,8 +86,8 @@ class MoeTruyen : HttpSource() {
     // ============================== Search ================================
 
     override fun searchMangaRequest(page: Int, query: String, filters: FilterList): Request {
-        val status = filters.findInstance<StatusFilter>()?.toUriPart()
-        val includedGenres = filters.findInstance<GenreFilter>()
+        val status = filters.firstInstanceOrNull<StatusFilter>()?.toUriPart()
+        val includedGenres = filters.firstInstanceOrNull<GenreFilter>()
             ?.state
             ?.filter { it.state }
             .orEmpty()
@@ -117,17 +118,13 @@ class MoeTruyen : HttpSource() {
 
     override fun getFilterList(): FilterList = getFilters()
 
-    private inline fun <reified T> FilterList.findInstance(): T? = firstOrNull { it is T } as? T
-
     // ============================== Details ===============================
-
-    override fun mangaDetailsRequest(manga: SManga): Request = GET("$baseUrl${manga.url}", headers)
 
     override fun mangaDetailsParse(response: Response): SManga {
         val document = response.asJsoup()
 
         return SManga.create().apply {
-            title = document.selectFirst("h1.manga-detail-title")!!.text().trim()
+            title = document.selectFirst("h1.manga-detail-title")!!.text()
             author = document.select("p.manga-detail-meta-line")
                 .firstOrNull { line ->
                     line.selectFirst(".manga-detail-meta-label")
@@ -136,22 +133,19 @@ class MoeTruyen : HttpSource() {
                         ?: false
                 }
                 ?.select("a.inline-link")
-                ?.joinToString { it.text().trim() }
+                ?.joinToString { it.text() }
                 ?.ifEmpty { null }
             genre = document.select(".manga-detail-genre-chips a.chip")
-                .joinToString { it.text().trim() }
+                .joinToString { it.text() }
                 .ifEmpty { null }
             description = document.selectFirst("[data-description-content]")
                 ?.text()
-                ?.trim()
                 ?.ifEmpty { null }
                 ?: document.selectFirst(".manga-description__text")
                     ?.text()
-                    ?.trim()
                     ?.ifEmpty { null }
             status = parseStatus(document.selectFirst(".manga-status-pill")?.text())
             thumbnail_url = document.selectFirst(".detail-cover img")?.absUrl("src")
-            initialized = true
         }
     }
 
@@ -164,9 +158,19 @@ class MoeTruyen : HttpSource() {
 
     // ============================== Chapters ==============================
 
+    override fun fetchChapterList(manga: SManga): rx.Observable<List<SChapter>> {
+        return rx.Observable.fromCallable {
+            client.newCall(chapterListRequest(manga)).execute().use { response ->
+                chapterListParsePaginated(response)
+            }
+        }
+    }
+
     override fun chapterListRequest(manga: SManga): Request = GET("$baseUrl${manga.url}", headers)
 
-    override fun chapterListParse(response: Response): List<SChapter> {
+    override fun chapterListParse(response: Response): List<SChapter> = parseChapterList(response.asJsoup())
+
+    private fun chapterListParsePaginated(response: Response): List<SChapter> {
         val chapters = mutableListOf<SChapter>()
         val visitedPages = mutableSetOf<String>()
         var currentPageUrl = response.request.url.toString()
@@ -202,10 +206,10 @@ class MoeTruyen : HttpSource() {
     private fun parseChapterList(document: Document): List<SChapter> = document.select("ul.chapter-list li.chapter a.chapter-link").map { element ->
         SChapter.create().apply {
             setUrlWithoutDomain(element.absUrl("href"))
-            name = element.selectFirst(".chapter-num")!!.text().trim()
+            name = element.selectFirst(".chapter-num")!!.text()
 
             val chapterTime = element.selectFirst(".chapter-time")
-            val relativeDate = chapterTime?.text()?.trim()
+            val relativeDate = chapterTime?.text()
             val absoluteDate = chapterTime?.attr("title")
                 ?.substringAfter("Cập nhật", missingDelimiterValue = "")
                 ?.trim()
@@ -237,8 +241,6 @@ class MoeTruyen : HttpSource() {
     }
 
     // ============================== Pages =================================
-
-    override fun pageListRequest(chapter: SChapter): Request = GET("$baseUrl${chapter.url}", headers)
 
     override fun pageListParse(response: Response): List<Page> {
         val document = response.asJsoup()
