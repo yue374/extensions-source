@@ -83,9 +83,7 @@ class TruyenTuoiTho :
         }
     }
 
-    private fun String.decodeBase64(): String {
-        return String(Base64.decode(this, Base64.DEFAULT), Charsets.UTF_8)
-    }
+    private fun String.decodeBase64(): String = String(Base64.decode(this, Base64.DEFAULT), Charsets.UTF_8)
 
     private fun String.xorWithKey(key: String): String {
         val output = CharArray(length)
