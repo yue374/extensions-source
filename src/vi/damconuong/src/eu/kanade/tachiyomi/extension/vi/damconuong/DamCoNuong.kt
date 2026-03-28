@@ -95,9 +95,7 @@ class DamCoNuong : HttpSource() {
             }
         }
 
-        val currentPage = response.request.url.queryParameter("page")?.toIntOrNull() ?: 1
-        val hasNextPage =
-            document.selectFirst("nav[aria-label=Pagination] a[href*=\"page=${currentPage + 1}\"]") != null
+        val hasNextPage = document.selectFirst("nav[aria-label=Pagination] a[aria-label=Next]") != null
 
         return MangasPage(mangas, hasNextPage)
     }
@@ -153,9 +151,9 @@ class DamCoNuong : HttpSource() {
     }
 
     private fun parseChapterDate(dateStr: String?): Long {
-        val relativeDate = parseRelativeDate(dateStr)
-        if (relativeDate != 0L) return relativeDate
-        return DATE_FORMAT.tryParse(dateStr)
+        return parseRelativeDate(dateStr)
+            .takeIf { it != 0L }
+            ?: DATE_FORMAT.tryParse(dateStr)
     }
 
     private fun parseRelativeDate(dateStr: String?): Long {
