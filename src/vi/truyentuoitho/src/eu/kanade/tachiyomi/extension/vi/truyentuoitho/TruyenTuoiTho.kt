@@ -20,23 +20,16 @@ class TruyenTuoiTho :
         "TruyenTuoiTho",
         "https://truyentuoitho.com",
         "vi",
-        SimpleDateFormat("dd/MM/yyyy", Locale("vi")),
+        SimpleDateFormat("dd/MM/yyyy", Locale.ROOT),
     ) {
 
     override val client: OkHttpClient = network.cloudflareClient.newBuilder()
         .rateLimit(3)
         .build()
 
-    private val chapterDateFormat = SimpleDateFormat("dd/MM/yyyy", Locale("vi"))
-
     override val filterNonMangaItems = false
 
     override val useNewChapterEndpoint = true
-
-    override fun parseChapterDate(date: String?): Long {
-        val parsed = chapterDateFormat.tryParse(date?.trim())
-        return if (parsed != 0L) parsed else super.parseChapterDate(date)
-    }
 
     override fun xhrChaptersRequest(mangaUrl: String): Request {
         val normalizedMangaUrl = mangaUrl.removeSuffix("/")
@@ -97,7 +90,7 @@ class TruyenTuoiTho :
     }
 
     @Serializable
-    private data class ChapterImagesPayload(
+    private class ChapterImagesPayload(
         val images: List<String> = emptyList(),
     )
 
