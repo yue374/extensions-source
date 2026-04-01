@@ -290,16 +290,12 @@ class DaoMeoDen : HttpSource() {
 
     // ============================== Helpers ===============================
 
-    private fun extractScriptVariable(document: Document, key: String): String? {
-        return Regex("""var\s+$key\s*=\s*'([^']*)'""")
-            .find(document.html())
-            ?.groupValues
-            ?.get(1)
-    }
+    private fun extractScriptVariable(document: Document, key: String): String? = Regex("""var\s+$key\s*=\s*'([^']*)'""")
+        .find(document.html())
+        ?.groupValues
+        ?.get(1)
 
-    private fun String.normalizeImageUrl(): String {
-        return if (startsWith("//")) "https:$this" else this
-    }
+    private fun String.normalizeImageUrl(): String = if (startsWith("//")) "https:$this" else this
 
     @Serializable
     private class BookListApiResponse(
