@@ -194,11 +194,9 @@ class YuriNeko : HttpSource() {
         return chapterTitle?.let { "$baseName: $it" } ?: baseName
     }
 
-    private fun parseChapterDate(dateText: String?): Long {
-        return dateText?.let {
-            runCatching { Instant.parse(it).toEpochMilli() }.getOrDefault(0L)
-        } ?: 0L
-    }
+    private fun parseChapterDate(dateText: String?): Long = dateText?.let {
+        runCatching { Instant.parse(it).toEpochMilli() }.getOrDefault(0L)
+    } ?: 0L
 
     // ============================== Pages =================================
     override fun pageListParse(response: Response): List<Page> {
@@ -210,10 +208,8 @@ class YuriNeko : HttpSource() {
         }
     }
 
-    private fun parsePageUrls(document: Document): List<String> {
-        return parsePageUrlsFromChapterData(document)
-            .ifEmpty { parsePageUrlsFromNextImage(document) }
-    }
+    private fun parsePageUrls(document: Document): List<String> = parsePageUrlsFromChapterData(document)
+        .ifEmpty { parsePageUrlsFromNextImage(document) }
 
     private fun parsePageUrlsFromChapterData(document: Document): List<String> {
         val scriptText = document.select("script").joinToString("\n") { it.data() }
@@ -225,12 +221,10 @@ class YuriNeko : HttpSource() {
             .toList()
     }
 
-    private fun parsePageUrlsFromNextImage(document: Document): List<String> {
-        return document.select("img[src], img[srcset]")
-            .mapNotNull(::parsePageUrlFromImageElement)
-            .distinct()
-            .toList()
-    }
+    private fun parsePageUrlsFromNextImage(document: Document): List<String> = document.select("img[src], img[srcset]")
+        .mapNotNull(::parsePageUrlFromImageElement)
+        .distinct()
+        .toList()
 
     private fun parsePageUrlFromImageElement(element: Element): String? {
         val directUrl = normalizeChapterImageUrl(element.absUrl("src"))
