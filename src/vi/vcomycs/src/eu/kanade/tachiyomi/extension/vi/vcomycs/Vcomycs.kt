@@ -30,7 +30,9 @@ import java.util.Locale
 import java.util.TimeZone
 import java.util.concurrent.ConcurrentHashMap
 
-class Vcomycs : HttpSource(), ConfigurableSource {
+class Vcomycs :
+    HttpSource(),
+    ConfigurableSource {
     override val name = "Vcomycs"
     override val lang = "vi"
     override val supportsLatest = true
