@@ -136,11 +136,9 @@ class MoonTruyen : HttpSource() {
 
     // ============================== Chapters ==============================
 
-    override fun chapterListParse(response: Response): List<SChapter> {
-        return response.asJsoup()
-            .select(".list-chapter .table-content .table-row")
-            .mapNotNull(::chapterFromElement)
-    }
+    override fun chapterListParse(response: Response): List<SChapter> = response.asJsoup()
+        .select(".list-chapter .table-content .table-row")
+        .mapNotNull(::chapterFromElement)
 
     private fun chapterFromElement(element: Element): SChapter? {
         val chapterLink = element.selectFirst(".table-data.chapter a") ?: return null
