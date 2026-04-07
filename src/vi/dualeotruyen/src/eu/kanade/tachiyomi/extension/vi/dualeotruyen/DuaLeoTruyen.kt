@@ -7,16 +7,16 @@ import androidx.preference.EditTextPreference
 import androidx.preference.PreferenceScreen
 import eu.kanade.tachiyomi.network.GET
 import eu.kanade.tachiyomi.network.interceptor.rateLimit
+import eu.kanade.tachiyomi.source.ConfigurableSource
 import eu.kanade.tachiyomi.source.model.FilterList
 import eu.kanade.tachiyomi.source.model.MangasPage
 import eu.kanade.tachiyomi.source.model.Page
 import eu.kanade.tachiyomi.source.model.SChapter
 import eu.kanade.tachiyomi.source.model.SManga
-import eu.kanade.tachiyomi.source.ConfigurableSource
 import eu.kanade.tachiyomi.source.online.HttpSource
 import eu.kanade.tachiyomi.util.asJsoup
-import keiyoushi.utils.getPreferences
 import keiyoushi.utils.firstInstanceOrNull
+import keiyoushi.utils.getPreferences
 import keiyoushi.utils.tryParse
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.Request
@@ -58,15 +58,13 @@ class DuaLeoTruyen :
 
     // ============================== Popular ===============================
 
-    override fun popularMangaRequest(page: Int): Request =
-        GET("$baseUrl/truyen-tranh-hot?page=$page", headers)
+    override fun popularMangaRequest(page: Int): Request = GET("$baseUrl/truyen-tranh-hot?page=$page", headers)
 
     override fun popularMangaParse(response: Response): MangasPage = mangaListParse(response)
 
     // ============================== Latest ================================
 
-    override fun latestUpdatesRequest(page: Int): Request =
-        GET("$baseUrl/truyen-moi-cap-nhat?page=$page", headers)
+    override fun latestUpdatesRequest(page: Int): Request = GET("$baseUrl/truyen-moi-cap-nhat?page=$page", headers)
 
     override fun latestUpdatesParse(response: Response): MangasPage = mangaListParse(response)
 
