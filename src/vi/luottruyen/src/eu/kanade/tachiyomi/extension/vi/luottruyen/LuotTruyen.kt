@@ -22,7 +22,9 @@ import okhttp3.Response
 import java.util.Calendar
 import java.util.TimeZone
 
-class LuotTruyen : HttpSource(), ConfigurableSource {
+class LuotTruyen :
+    HttpSource(),
+    ConfigurableSource {
 
     override val name = "LuotTruyen"
 
@@ -57,15 +59,11 @@ class LuotTruyen : HttpSource(), ConfigurableSource {
             }
         }
 
-    private fun removeWebViewToken(userAgent: String): String {
-        return userAgent.replace(""";\s*wv\)""".toRegex(), ")")
-    }
+    private fun removeWebViewToken(userAgent: String): String = userAgent.replace(""";\s*wv\)""".toRegex(), ")")
 
     // ============================== Popular ===============================
 
-    override fun popularMangaRequest(page: Int): Request {
-        return GET("$baseUrl/tim-truyen?status=-1&sort=10" + if (page > 1) "&page=$page" else "", headers)
-    }
+    override fun popularMangaRequest(page: Int): Request = GET("$baseUrl/tim-truyen?status=-1&sort=10" + if (page > 1) "&page=$page" else "", headers)
 
     override fun popularMangaParse(response: Response): MangasPage {
         val document = response.asJsoup()
@@ -87,9 +85,7 @@ class LuotTruyen : HttpSource(), ConfigurableSource {
 
     // =============================== Latest ===============================
 
-    override fun latestUpdatesRequest(page: Int): Request {
-        return GET("$baseUrl/?page=$page&typegroup=0", headers)
-    }
+    override fun latestUpdatesRequest(page: Int): Request = GET("$baseUrl/?page=$page&typegroup=0", headers)
 
     override fun latestUpdatesParse(response: Response): MangasPage {
         val document = response.asJsoup()
@@ -144,9 +140,7 @@ class LuotTruyen : HttpSource(), ConfigurableSource {
         return GET(url, headers)
     }
 
-    override fun searchMangaParse(response: Response): MangasPage {
-        return popularMangaParse(response)
-    }
+    override fun searchMangaParse(response: Response): MangasPage = popularMangaParse(response)
 
     // =============================== Details ==============================
 
@@ -165,14 +159,12 @@ class LuotTruyen : HttpSource(), ConfigurableSource {
         }
     }
 
-    private fun String?.toStatus(): Int {
-        return when {
-            this == null -> SManga.UNKNOWN
-            this.contains("Đang tiến hành", ignoreCase = true) -> SManga.ONGOING
-            this.contains("Đang cập nhật", ignoreCase = true) -> SManga.ONGOING
-            this.contains("Hoàn thành", ignoreCase = true) -> SManga.COMPLETED
-            else -> SManga.UNKNOWN
-        }
+    private fun String?.toStatus(): Int = when {
+        this == null -> SManga.UNKNOWN
+        this.contains("Đang tiến hành", ignoreCase = true) -> SManga.ONGOING
+        this.contains("Đang cập nhật", ignoreCase = true) -> SManga.ONGOING
+        this.contains("Hoàn thành", ignoreCase = true) -> SManga.COMPLETED
+        else -> SManga.UNKNOWN
     }
 
     // ============================== Chapters ==============================
@@ -251,9 +243,7 @@ class LuotTruyen : HttpSource(), ConfigurableSource {
         return images.mapIndexed { i, img -> Page(i, imageUrl = img.absUrl("src")) }
     }
 
-    override fun imageUrlParse(response: Response): String {
-        throw UnsupportedOperationException()
-    }
+    override fun imageUrlParse(response: Response): String = throw UnsupportedOperationException()
 
     // ============================== Settings ==============================
 
@@ -266,7 +256,6 @@ class LuotTruyen : HttpSource(), ConfigurableSource {
             dialogTitle = BASE_URL_PREF_TITLE
             dialogMessage = "Default: $defaultBaseUrl"
         }.let(screen::addPreference)
-
     }
 
     private fun getPrefBaseUrl(): String = preferences.getString(BASE_URL_PREF, defaultBaseUrl)!!
