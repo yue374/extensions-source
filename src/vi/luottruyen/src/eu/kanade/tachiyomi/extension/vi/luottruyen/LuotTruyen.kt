@@ -19,6 +19,7 @@ import okhttp3.FormBody
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.Request
 import okhttp3.Response
+import org.jsoup.nodes.Element
 import java.util.Calendar
 import java.util.TimeZone
 
@@ -70,10 +71,9 @@ class LuotTruyen :
 
         val mangaList = document.select("div.item").map { element ->
             SManga.create().apply {
-                element.selectFirst("figcaption h3 a, a.jtip")!!.let {
-                    title = it.text()
-                    setUrlWithoutDomain(it.absUrl("href"))
-                }
+                val linkElement: Element = element.selectFirst("figcaption h3 a, a.jtip")!!
+                title = linkElement.text()
+                setUrlWithoutDomain(linkElement.absUrl("href"))
                 thumbnail_url = element.selectFirst("div.image a img")?.absUrl("src")
             }
         }
@@ -92,10 +92,9 @@ class LuotTruyen :
 
         val mangaList = document.select("#ctl00_divCenter .row > .item").map { element ->
             SManga.create().apply {
-                element.selectFirst("figcaption h3 a, a.jtip")!!.let {
-                    title = it.text()
-                    setUrlWithoutDomain(it.absUrl("href"))
-                }
+                val linkElement: Element = element.selectFirst("figcaption h3 a, a.jtip")!!
+                title = linkElement.text()
+                setUrlWithoutDomain(linkElement.absUrl("href"))
                 thumbnail_url = element.selectFirst("div.image a img")?.absUrl("src")
             }
         }
@@ -149,12 +148,13 @@ class LuotTruyen :
 
         return SManga.create().apply {
             title = document.selectFirst("article#item-detail h1.title-detail, article#item-detail h1, h1.title-detail")!!.text()
-            document.selectFirst("article#item-detail")?.let { info ->
-                author = info.selectFirst("li.author p.col-xs-8")?.text()
-                status = info.selectFirst("li.status p.col-xs-8")?.text().toStatus()
-                genre = info.select("li.kind p.col-xs-8 a").joinToString { it.text() }
-                description = info.select("div.detail-content p").joinToString("\n") { it.text() }
-                thumbnail_url = info.selectFirst("div.col-image img")?.absUrl("src")
+            val infoElement: Element? = document.selectFirst("article#item-detail")
+            if (infoElement != null) {
+                author = infoElement.selectFirst("li.author p.col-xs-8")?.text()
+                status = infoElement.selectFirst("li.status p.col-xs-8")?.text().toStatus()
+                genre = infoElement.select("li.kind p.col-xs-8 a").joinToString { it.text() }
+                description = infoElement.select("div.detail-content p").joinToString("\n") { it.text() }
+                thumbnail_url = infoElement.selectFirst("div.col-image img")?.absUrl("src")
             }
         }
     }
@@ -189,9 +189,10 @@ class LuotTruyen :
 
         return document.select("li.row:not(.heading)").map { element ->
             SChapter.create().apply {
-                element.selectFirst("div.chapter a, a")?.let {
-                    name = it.text()
-                    setUrlWithoutDomain(it.absUrl("href"))
+                val chapterLinkElement: Element? = element.selectFirst("div.chapter a, a")
+                if (chapterLinkElement != null) {
+                    name = chapterLinkElement.text()
+                    setUrlWithoutDomain(chapterLinkElement.absUrl("href"))
                 }
                 date_upload = parseRelativeDate(element.selectFirst("div.col-xs-4")?.text())
             }
