@@ -1,0 +1,10 @@
+ext {
+    extName = 'NetTruyenViet (unoriginal)'
+    extClass = '.NetTruyenViet'
+    themePkg = 'wpcomics'
+    baseUrl = 'https://nettruyenviet10.com'
+    overrideVersionCode = 1
+    isNsfw = false
+}
+
+apply from: "$rootDir/common.gradle"
