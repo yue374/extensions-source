@@ -50,15 +50,13 @@ class TruyenTVN : HttpSource() {
 
     // ============================== Popular ===============================
 
-    override fun popularMangaRequest(page: Int): Request =
-        GET(buildPagedUrl(POPULAR_PATH, page), headers)
+    override fun popularMangaRequest(page: Int): Request = GET(buildPagedUrl(POPULAR_PATH, page), headers)
 
     override fun popularMangaParse(response: Response): MangasPage = parseMangaPage(response.asJsoup())
 
     // ============================== Latest ================================
 
-    override fun latestUpdatesRequest(page: Int): Request =
-        GET(buildPagedUrl(LATEST_PATH, page), headers)
+    override fun latestUpdatesRequest(page: Int): Request = GET(buildPagedUrl(LATEST_PATH, page), headers)
 
     override fun latestUpdatesParse(response: Response): MangasPage = parseMangaPage(response.asJsoup())
 
@@ -316,12 +314,10 @@ class TruyenTVN : HttpSource() {
         return MangasPage(mangaList, hasNextPage)
     }
 
-    private fun buildPagedUrl(path: String, page: Int): String {
-        return if (page > 1) {
-            "$baseUrl$path/page/$page"
-        } else {
-            "$baseUrl$path"
-        }
+    private fun buildPagedUrl(path: String, page: Int): String = if (page > 1) {
+        "$baseUrl$path/page/$page"
+    } else {
+        "$baseUrl$path"
     }
 
     companion object {

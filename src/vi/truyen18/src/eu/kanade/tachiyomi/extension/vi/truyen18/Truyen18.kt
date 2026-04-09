@@ -40,19 +40,15 @@ class Truyen18 : HttpSource() {
 
     // ============================== Popular ===============================
 
-    override fun popularMangaRequest(page: Int): Request =
-        GET(buildPagedUrl("/xem-nhieu-nhat", page), headers)
+    override fun popularMangaRequest(page: Int): Request = GET(buildPagedUrl("/xem-nhieu-nhat", page), headers)
 
-    override fun popularMangaParse(response: Response): MangasPage =
-        parseMangaPage(response)
+    override fun popularMangaParse(response: Response): MangasPage = parseMangaPage(response)
 
     // ============================== Latest ================================
 
-    override fun latestUpdatesRequest(page: Int): Request =
-        GET(buildPagedUrl("/moi-cap-nhat", page), headers)
+    override fun latestUpdatesRequest(page: Int): Request = GET(buildPagedUrl("/moi-cap-nhat", page), headers)
 
-    override fun latestUpdatesParse(response: Response): MangasPage =
-        parseMangaPage(response)
+    override fun latestUpdatesParse(response: Response): MangasPage = parseMangaPage(response)
 
     // ============================== Search ================================
 
@@ -71,8 +67,7 @@ class Truyen18 : HttpSource() {
         return GET(buildPagedUrl("/category/$genreSlug", page), headers)
     }
 
-    override fun searchMangaParse(response: Response): MangasPage =
-        parseMangaPage(response)
+    override fun searchMangaParse(response: Response): MangasPage = parseMangaPage(response)
 
     // ============================== Details ===============================
 
@@ -224,16 +219,14 @@ class Truyen18 : HttpSource() {
         return FIRST_CHAPTER_CONTENT_REGEX.find(body)?.groupValues?.get(1)
     }
 
-    private fun decodeEscapedContent(content: String): String {
-        return content
-            .replace("\\u003c", "<")
-            .replace("\\u003e", ">")
-            .replace("\\u0026", "&")
-            .replace("\\u002F", "/")
-            .replace("\\\"", "\"")
-            .replace("\\/", "/")
-            .replace("\\n", "\n")
-    }
+    private fun decodeEscapedContent(content: String): String = content
+        .replace("\\u003c", "<")
+        .replace("\\u003e", ">")
+        .replace("\\u0026", "&")
+        .replace("\\u002F", "/")
+        .replace("\\\"", "\"")
+        .replace("\\/", "/")
+        .replace("\\n", "\n")
 
     override fun imageUrlParse(response: Response): String = throw UnsupportedOperationException()
 
@@ -274,12 +267,10 @@ class Truyen18 : HttpSource() {
         }
     }
 
-    private fun buildPagedUrl(path: String, page: Int): String {
-        return if (page > 1) {
-            "$baseUrl$path/page/$page"
-        } else {
-            "$baseUrl$path"
-        }
+    private fun buildPagedUrl(path: String, page: Int): String = if (page > 1) {
+        "$baseUrl$path/page/$page"
+    } else {
+        "$baseUrl$path"
     }
 
     companion object {

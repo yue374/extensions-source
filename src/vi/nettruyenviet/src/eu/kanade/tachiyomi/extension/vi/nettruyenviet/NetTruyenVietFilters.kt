@@ -46,8 +46,7 @@ class StatusFilter :
         ),
     )
 
-open class UriPartFilter(displayName: String, private val options: Array<Pair<String, String?>>) :
-    Filter.Select<String>(displayName, options.map { it.first }.toTypedArray()) {
+open class UriPartFilter(displayName: String, private val options: Array<Pair<String, String?>>) : Filter.Select<String>(displayName, options.map { it.first }.toTypedArray()) {
     fun toUriPart(): String? = options[state].second
 }
 

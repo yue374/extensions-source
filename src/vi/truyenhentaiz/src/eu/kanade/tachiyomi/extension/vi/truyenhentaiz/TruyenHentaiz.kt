@@ -39,19 +39,15 @@ class TruyenHentaiz : HttpSource() {
 
     // ============================== Popular ===============================
 
-    override fun popularMangaRequest(page: Int): Request =
-        GET(buildPagedUrl("/xem-nhieu-nhat", page), headers)
+    override fun popularMangaRequest(page: Int): Request = GET(buildPagedUrl("/xem-nhieu-nhat", page), headers)
 
-    override fun popularMangaParse(response: Response): MangasPage =
-        parseMangaPage(response)
+    override fun popularMangaParse(response: Response): MangasPage = parseMangaPage(response)
 
     // ============================== Latest ================================
 
-    override fun latestUpdatesRequest(page: Int): Request =
-        GET(buildPagedUrl("/moi-cap-nhat", page), headers)
+    override fun latestUpdatesRequest(page: Int): Request = GET(buildPagedUrl("/moi-cap-nhat", page), headers)
 
-    override fun latestUpdatesParse(response: Response): MangasPage =
-        parseMangaPage(response)
+    override fun latestUpdatesParse(response: Response): MangasPage = parseMangaPage(response)
 
     // ============================== Search ================================
 
@@ -76,8 +72,7 @@ class TruyenHentaiz : HttpSource() {
         return popularMangaRequest(page)
     }
 
-    override fun searchMangaParse(response: Response): MangasPage =
-        parseMangaPage(response)
+    override fun searchMangaParse(response: Response): MangasPage = parseMangaPage(response)
 
     private fun parseMangaPage(response: Response): MangasPage {
         val document = response.asJsoup()
@@ -227,23 +222,19 @@ class TruyenHentaiz : HttpSource() {
         return url.pathSegments.getOrNull(pageIndex + 1)?.toIntOrNull() ?: 1
     }
 
-    private fun buildPagedUrl(path: String, page: Int): String {
-        return if (page > 1) {
-            "$baseUrl$path/page/$page"
-        } else {
-            "$baseUrl$path"
-        }
+    private fun buildPagedUrl(path: String, page: Int): String = if (page > 1) {
+        "$baseUrl$path/page/$page"
+    } else {
+        "$baseUrl$path"
     }
 
     // ============================== Filters ===============================
 
     override fun getFilterList(): FilterList = getFilters()
 
-    private fun imageUrlFromElement(element: Element): String? {
-        return element.absUrl("src")
-            .ifBlank { element.absUrl("data-src") }
-            .ifBlank { null }
-    }
+    private fun imageUrlFromElement(element: Element): String? = element.absUrl("src")
+        .ifBlank { element.absUrl("data-src") }
+        .ifBlank { null }
 
     companion object {
         private val MULTIPLE_SPACES_REGEX = Regex("\\s+")

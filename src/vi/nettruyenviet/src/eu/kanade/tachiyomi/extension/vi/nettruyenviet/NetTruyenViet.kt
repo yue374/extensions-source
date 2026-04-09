@@ -96,10 +96,8 @@ class NetTruyenViet :
             ?.takeUnless { it.isBlank() }
     }
 
-    private fun hasNextPage(document: Document): Boolean {
-        return document.select("ul.pagination li.page-item:not(.disabled) > a")
-            .any { link -> link.text() == NEXT_PAGE_SYMBOL }
-    }
+    private fun hasNextPage(document: Document): Boolean = document.select("ul.pagination li.page-item:not(.disabled) > a")
+        .any { link -> link.text() == NEXT_PAGE_SYMBOL }
 
     // ============================== Latest ================================
 
@@ -222,9 +220,7 @@ class NetTruyenViet :
         }
     }
 
-    private fun parseChapterDate(rawDate: String): Long {
-        return chapterDateFormat.tryParse(rawDate).takeIf { it > 0L } ?: parseRelativeDate(rawDate)
-    }
+    private fun parseChapterDate(rawDate: String): Long = chapterDateFormat.tryParse(rawDate).takeIf { it > 0L } ?: parseRelativeDate(rawDate)
 
     private fun parseRelativeDate(dateText: String?): Long {
         if (dateText.isNullOrBlank()) return 0L

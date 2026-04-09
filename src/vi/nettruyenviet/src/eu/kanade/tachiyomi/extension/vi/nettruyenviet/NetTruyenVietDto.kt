@@ -8,10 +8,8 @@ class ChapterListDto(
     @SerialName("data")
     private val data: List<ChapterDto> = emptyList(),
 ) {
-    fun toChapterItems(slug: String): List<ChapterItem> {
-        return data.map { chapter ->
-            chapter.toChapterItem(slug)
-        }
+    fun toChapterItems(slug: String): List<ChapterItem> = data.map { chapter ->
+        chapter.toChapterItem(slug)
     }
 }
 
@@ -26,14 +24,12 @@ class ChapterDto(
     @SerialName("chapter_num")
     private val chapterNum: Float = -1f,
 ) {
-    fun toChapterItem(slug: String): ChapterItem {
-        return ChapterItem(
-            name = chapterName,
-            url = "/truyen-tranh/$slug/$chapterSlug",
-            updatedAt = updatedAt,
-            chapterNumber = chapterNum,
-        )
-    }
+    fun toChapterItem(slug: String): ChapterItem = ChapterItem(
+        name = chapterName,
+        url = "/truyen-tranh/$slug/$chapterSlug",
+        updatedAt = updatedAt,
+        chapterNumber = chapterNum,
+    )
 }
 
 class ChapterItem(

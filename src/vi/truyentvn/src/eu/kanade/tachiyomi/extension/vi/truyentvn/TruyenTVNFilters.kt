@@ -17,8 +17,7 @@ class TopicFilter : UriPartFilter("Chủ đề", TOPIC_VALUES)
 
 class GenreFilter : UriPartFilter("Thể loại", GENRE_VALUES)
 
-open class UriPartFilter(displayName: String, values: Array<Pair<String, String?>>) :
-    Filter.Select<String>(displayName, values.map { it.first }.toTypedArray()) {
+open class UriPartFilter(displayName: String, values: Array<Pair<String, String?>>) : Filter.Select<String>(displayName, values.map { it.first }.toTypedArray()) {
     private val options = values
     fun toUriPart(): String? = options[state].second
 }
