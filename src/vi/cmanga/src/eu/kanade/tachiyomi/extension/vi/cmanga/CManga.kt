@@ -159,7 +159,7 @@ class CManga :
         val info = parseAlbumInfo(item.info) ?: return null
         val title = info.name ?: return null
         val slug = info.url ?: return null
-        val id = item.id_album ?: return null
+        val id = item.idAlbum ?: return null
 
         return SManga.create().apply {
             this.title = title
@@ -290,7 +290,7 @@ class CManga :
     ): List<SChapter> {
         return chapterItems.mapNotNull { chapterItem ->
             val chapterInfo = parseChapterInfo(chapterItem.info) ?: return@mapNotNull null
-            val chapterId = chapterInfo.id.asStringOrNull() ?: chapterItem.id_chapter?.toString() ?: return@mapNotNull null
+            val chapterId = chapterInfo.id.asStringOrNull() ?: chapterItem.idChapter?.toString() ?: return@mapNotNull null
             if (!seenChapterIds.add(chapterId)) return@mapNotNull null
 
             val chapterNumber = chapterInfo.num.asStringOrNull() ?: return@mapNotNull null
@@ -301,7 +301,7 @@ class CManga :
             SChapter.create().apply {
                 name = chapterName
                 setUrlWithoutDomain("/album/$slug/chapter-$chapterNumber-$chapterId")
-                date_upload = chapterInfo.last_update?.let { DATE_FORMAT.tryParse(it) } ?: 0L
+                date_upload = chapterInfo.lastUpdate?.let { DATE_FORMAT.tryParse(it) } ?: 0L
             }
         }
     }

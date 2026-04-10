@@ -1,5 +1,6 @@
 package eu.kanade.tachiyomi.extension.vi.cmanga
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
 
@@ -18,10 +19,12 @@ class CMangaAlbumListData {
 
 @Serializable
 class CMangaAlbumItem {
-    var id_album: Long? = null
+    @SerialName("id_album")
+    var idAlbum: Long? = null
     var info: String? = null
     var data: String? = null
-    var last_update: String? = null
+    @SerialName("last_update")
+    var lastUpdate: String? = null
     var file: String? = null
 }
 
@@ -59,7 +62,8 @@ class CMangaChapterListResponse {
 
 @Serializable
 class CMangaChapterItem {
-    var id_chapter: Long? = null
+    @SerialName("id_chapter")
+    var idChapter: Long? = null
     var info: String? = null
 }
 
@@ -68,7 +72,8 @@ class CMangaChapterInfo {
     var id: JsonElement? = null
     var num: JsonElement? = null
     var name: String? = null
-    var last_update: String? = null
+    @SerialName("last_update")
+    var lastUpdate: String? = null
     var level: JsonElement? = null
     var lock: CMangaChapterLock? = null
 }
