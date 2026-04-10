@@ -23,6 +23,7 @@ class CMangaAlbumItem {
     var idAlbum: Long? = null
     var info: String? = null
     var data: String? = null
+
     @SerialName("last_update")
     var lastUpdate: String? = null
     var file: String? = null
@@ -72,6 +73,7 @@ class CMangaChapterInfo {
     var id: JsonElement? = null
     var num: JsonElement? = null
     var name: String? = null
+
     @SerialName("last_update")
     var lastUpdate: String? = null
     var level: JsonElement? = null
