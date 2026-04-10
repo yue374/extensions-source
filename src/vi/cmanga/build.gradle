@@ -1,6 +1,6 @@
 ext {
-    extName = 'NetTruyenViet (unoriginal)'
-    extClass = '.NetTruyenViet'
+    extName = 'CManga'
+    extClass = '.CManga'
     extVersionCode = 1
     isNsfw = false
 }
